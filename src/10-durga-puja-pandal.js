@@ -91,24 +91,100 @@
  */
 export function createPandalElement(pandal) {
   // Your code here
+  if(!pandal || !pandal.name || !pandal.zone || !pandal.theme || !pandal.budget || typeof pandal.budget !== "number" || !pandal.rating || typeof pandal.rating !== "number") return null
+  const { name, zone, theme, budget, rating } = pandal;
+
+  const div = document.createElement("div")
+  div.className = "pandal";
+  div.setAttribute("data-name", name)
+  div.setAttribute("data-zone", zone)
+  div.setAttribute("data-theme", theme)
+  div.setAttribute("data-budget", budget)
+  div.setAttribute("data-rating", rating)
+
+  div.textContent = name
+
+  return div
 }
 
 export function getPandalInfo(element) {
   // Your code here
+  if(!element) return null
+
+  const name = element.getAttribute("data-name")
+  const zone = element.getAttribute("data-zone")
+  const theme = element.getAttribute("data-theme")
+  const budget = element.getAttribute("data-budget")
+  const rating = element.getAttribute("data-rating")
+
+  return {
+    name, zone, theme, budget : +budget, rating: +rating
+  }
+
 }
 
 export function updatePandalRating(element, newRating) {
   // Your code here
+  if(!element || newRating === null || typeof newRating !== "number" || newRating <0 || newRating > 5) return null
+
+  const oldRating = element.getAttribute("data-rating");
+  element.setAttribute("data-rating", newRating)
+
+  return +oldRating
+
 }
 
 export function filterPandalsByZone(container, zone) {
   // Your code here
+  if(!zone || typeof zone !== "string" || !container) return [];
+
+  const result = []
+
+  for (const child of container.children) {
+    if(child.getAttribute("data-zone") === zone){
+      result.push(child)
+    }
+  }
+
+  return result
 }
 
 export function getPandalsByBudgetRange(container, min, max) {
   // Your code here
+
+  if(!container || typeof min !== "number" || typeof max !== "number") return [];
+
+  const result = []
+
+  for (const child of container.children) {
+    if(child.classList.contains("pandal")){
+      const value = +child.getAttribute("data-budget");
+
+      if(value >= min && value <= max){
+        result.push(child);
+      }
+    }
+  }
+
+  return result
 }
 
 export function sortPandalsByRating(container) {
   // Your code here
+  if(!container) return []
+
+  let childs = [...container.children];
+
+  childs = childs.sort((c1,c2)=>{
+    return +c2.getAttribute("data-rating") - +c1.getAttribute("data-rating")
+  })
+
+  container.innerHTML = "";
+
+  for (const child of childs) {
+    container.appendChild(child)
+  }
+
+  return childs
+
 }

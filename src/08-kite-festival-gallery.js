@@ -80,20 +80,96 @@
  */
 export function renderKiteCard(kite) {
   // Your code here
+  if (!kite || !kite.name || !kite.color || !kite.size || !kite.maker || !kite.image) return null
+
+  const { name, color, size, maker, image } = kite;
+
+  const div = document.createElement("div");
+  div.className = "kite-card";
+
+  const img = document.createElement("img");
+  img.src = image;
+  img.alt = name;
+
+  const h3 = document.createElement("h3");
+  h3.className = "kite-name";
+  h3.textContent = name;
+
+  const p1 = document.createElement("p");
+  const p2 = document.createElement("p");
+
+  p1.className = "kite-maker"
+  p2.className = "kite-info";
+
+  p1.textContent = `by ${maker}`;
+  p2.textContent = `${size} - ${color}`;
+
+
+  div.appendChild(h3);
+  div.appendChild(img);
+  div.appendChild(p1);
+  div.appendChild(p2);
+
+  return div
 }
 
 export function renderGallery(container, kites) {
   // Your code here
+  if (!container || !Array.isArray(kites)) return -1;
+
+  container.innerHTML = "";
+  kites.forEach(kite => {
+    const div = renderKiteCard(kite);
+    if (div) container.appendChild(div);
+  });
+
+
+  return container.childElementCount
 }
 
 export function filterKites(container, kites, filterFn) {
   // Your code here
+  if (!filterFn || typeof filterFn !== "function") return -1
+  kites = kites.filter((kite) => filterFn(kite))
+
+  return renderGallery(container, kites)
 }
 
-export function sortAndRender(container, kites, sortField, order) {
+export function sortAndRender(container, kites, sortField, order = "asc") {
   // Your code here
+
+  if (!container || !Array.isArray(kites)) return [];
+
+  const newKites = [...kites].sort((a, b) => {
+    if (a[sortField] < b[sortField]) {
+      return order === "asc" ? -1 : 1;
+    }
+    if (a[sortField] > b[sortField]) {
+      return order === "asc" ? 1 : -1;
+    }
+    return 0;
+  });
+
+  renderGallery(container, newKites)
+
+  return newKites
+
 }
 
 export function renderEmptyState(container, message) {
   // Your code here
+  if(!container) return false
+
+  const hasChilds = container.childElementCount >0;
+
+  if(!hasChilds){
+    const p = document.createElement("p");
+    p.className = "empty-state"
+    p.textContent = message;
+    container.appendChild(p)
+    return true
+  }
+
+  return false
+
 }

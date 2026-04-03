@@ -66,16 +66,58 @@
  */
 export function updateChaiPrice(document, chaiType, newPrice) {
   // Your code here
+  if(!newPrice || typeof newPrice !== "number" || newPrice <= 0 || !chaiType || typeof chaiType !== "string" || chaiType.trim().length === 0) return false
+  
+  const element = document.getElementById(`price-${chaiType}`)
+
+  if(!element) return false
+
+  element.textContent = `₹${newPrice}`;
+  
+  return true
 }
 
 export function getChaiPrice(document, chaiType) {
   // Your code here
+  const element = document.getElementById(`price-${chaiType}`)
+  if(!element) return null
+
+  const price = +element.textContent.slice(1)
+
+  return price
 }
 
 export function updateStallName(document, newName) {
   // Your code here
+  const element = document.querySelector('.stall-name');
+  if(!element || !newName || typeof newName !== "string") return null
+  const oldTextContent = element.textContent;
+  element.textContent = newName
+
+  return oldTextContent
 }
 
 export function highlightCheapestChai(document) {
   // Your code here
+  const elements = document.querySelectorAll('.chai-price');
+  if(!elements)  return null
+  
+  let minPrice = Number.POSITIVE_INFINITY
+  let minPriceElement;
+  elements.forEach(e => {
+    e.classList.remove("cheapest");
+    const price = +e.textContent.slice(1)
+    if(price < minPrice) {
+      minPrice = price
+      minPriceElement = e
+    };
+    
+  });
+
+   if (!minPriceElement) return null;
+
+  minPriceElement.classList.add("cheapest")
+
+  return minPriceElement.getAttribute("data-chai")
+
 }

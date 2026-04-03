@@ -59,16 +59,106 @@
  */
 export function setupAddButton(button, thaliElement, itemName) {
   // Your code here
+  if(!button || !thaliElement || !itemName) return null
+  
+  const handler = ()=>{
+    const li = document.createElement("li")
+    li.textContent = itemName;
+    thaliElement.append(li)
+  }
+  
+  button.addEventListener("click", handler)
+
+  const cleanup = ()=> button.removeEventListener("click", handler);
+
+  return cleanup
 }
 
 export function setupRemoveButton(button, thaliElement) {
   // Your code here
+  if(!button || !thaliElement) return null;
+  const handler = ()=>{
+    const child = thaliElement.lastElementChild
+    if(child){
+      thaliElement.removeChild(child)
+    }
+  }
+
+  button.addEventListener("click", handler)
+
+  const cleanup = ()=> button.removeEventListener("click", handler);
+
+  return cleanup
 }
 
 export function setupToggleItem(button, thaliElement, itemName) {
   // Your code here
+  if(!button || !thaliElement|| !itemName) return null;
+
+  const handler = ()=>{
+    const nodeList = thaliElement.querySelectorAll("li")
+    for (const element of nodeList) {
+      if(element.textContent === itemName){
+        thaliElement.removeChild(element)
+        return;
+      }
+    }
+
+    const li = document.createElement("li")
+    li.textContent = itemName;
+    thaliElement.appendChild(li)
+
+  }
+
+  button.addEventListener("click", handler)
+
+  const cleanup = ()=> button.removeEventListener("click", handler);
+
+  return cleanup
+
 }
 
 export function createThaliManager(thaliElement, counterElement) {
   // Your code here
+
+  if(!thaliElement || !counterElement) return null
+
+  const addItem = (name)=>{
+    const li = document.createElement("li")
+    li.textContent = name;
+    thaliElement.appendChild(li)
+
+    counterElement.textContent = thaliElement.childElementCount
+
+    return li
+  }
+
+  const removeItem = (name)=>{
+    const nodeList = thaliElement.querySelectorAll("li")
+    for (const element of nodeList) {
+      if(element.textContent === name){
+        thaliElement.removeChild(element)
+        counterElement.textContent = thaliElement.childElementCount;
+        return true
+      }
+    }
+
+    return false
+  }
+
+  const getCount = ()=>{
+    return thaliElement.childElementCount;
+  }
+  const clear = ()=>{
+    thaliElement.replaceChildren();
+    counterElement.textContent = 0;
+  }
+
+  return {
+    addItem,
+    removeItem,
+    getCount,
+    clear
+  }
+
 }

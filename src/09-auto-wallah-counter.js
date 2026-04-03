@@ -88,28 +88,93 @@
  */
 export function findQueueContainer(element) {
   // Your code here
+  if(!element) return null
+  return element.closest(".queue-container")
 }
 
 export function getNextInQueue(element) {
   // Your code here
+  if(!element) return null
+  return element.nextElementSibling
 }
 
 export function getPreviousInQueue(element) {
   // Your code here
+   if(!element) return null
+  return element.previousElementSibling
 }
 
 export function getQueuePosition(element) {
   // Your code here
+  if(!element) return -1
+  let child = 0;
+
+  const parentNode = element.parentNode
+  if(!parentNode) return -1
+  for (const node of parentNode.children) {
+    child ++;
+    if(node === element) return child
+    
+  }
+  return -1;
 }
 
 export function moveToFront(element) {
   // Your code here
+  if(!element) return false;
+
+  const parentNode = element.parentNode
+  if(!parentNode) return false;
+
+  if(parentNode.firstElementChild === element) return false;
+
+  parentNode.insertBefore(element, parentNode.firstChild)
+  return true
 }
 
 export function removeFromQueue(element) {
   // Your code here
+  if(!element) return null;
+
+  const parentNode = element.parentNode;
+  if(!parentNode) return null;
+
+  return parentNode.removeChild(element);
+
+
 }
 
 export function getQueueStats(queueContainer) {
   // Your code here
+  if(!queueContainer) return null;
+  
+  const count = {
+    waiting:0,
+    serving:0,
+    completed:0,
+  }
+
+  for (const child of queueContainer.children) {
+    
+    if(child.classList.contains("waiting")){
+      count.waiting ++;
+    }
+    if(child.classList.contains("serving")){
+      count.serving++;
+    }
+    if(child.classList.contains("completed")){
+      count.completed++
+    }
+    
+  }
+
+  const total = count.completed+count.serving+count.waiting;
+
+  return {
+    total,
+    waiting:count.waiting,
+    serving:count.serving,
+    completed:count.completed
+  }
+
 }

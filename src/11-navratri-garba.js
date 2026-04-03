@@ -90,24 +90,100 @@
  */
 export function insertDancer(stage, newDancer, referenceDancer) {
   // Your code here
+
+  if(!stage || !newDancer) return false;
+
+
+  stage.insertBefore(newDancer, referenceDancer )
+  
+  return true
+
 }
 
 export function cloneDancer(dancer, deep) {
   // Your code here
+  if(!dancer) return null
+  const copy = dancer.cloneNode(deep);
+  if(dancer.id){
+    copy.id += "-copy"
+  }
+
+  return copy
+
 }
 
 export function replaceDancer(stage, oldDancer, newDancer) {
-  // Your code here
+  
+  try {
+    stage.replaceChild(newDancer, oldDancer)
+    return oldDancer
+  } catch (error) {
+    return null
+  }
+
 }
 
 export function removeDancer(stage, dancer) {
   // Your code here
+  try {
+    
+    return stage.removeChild(dancer);
+  } catch (error) {
+    return null
+  }
+  
 }
 
 export function rearrangeStage(stage, order) {
   // Your code here
+
+  const childrens = {}
+  let index = 0
+
+  try {
+    
+    
+
+    const childs = stage.children;
+
+    if(childs.length > order.length) throw null
+
+    for (const child of childs) {
+      childrens[index] = child
+      index ++;
+    }
+
+    stage.innerHTML = ""
+
+    order.forEach(i => {
+      const child = childrens[i];
+      stage.appendChild(child)
+    });
+
+    return true
+
+  } catch (error) {
+    return false
+  }
 }
 
 export function duplicateFormation(stage) {
   // Your code here
+
+  try {
+    
+    const copyStage = stage.cloneNode(true);
+    
+    if(stage.id){
+      copyStage.id += "-clone"
+    }
+
+    return copyStage
+
+  } catch (error) {
+    return null
+  }
+
+  
+
 }
